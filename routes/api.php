@@ -17,10 +17,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/test', function () {
-  $message = 'hello!api!';
-
-  return response()->json([
-      'message' => $message
-  ]);
-});
+Route::post('/recipe', 'RecipeController@store');
