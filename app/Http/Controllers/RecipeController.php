@@ -26,7 +26,7 @@ class RecipeController extends Controller
         //$form = $request->input('name');
         $recipe->user_id = 1;
         $recipe->name = $request->input('name');
-        Log::info('★★★登録する中身だよ！★★★');
+        Log::info('★★★登録処理です★★★');
         // $recipe->fill($form)->save();
         $recipe->save();
         $recipes = Recipe::all();

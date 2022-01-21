@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeMemoByte extends Migration
+class ChangeGenreByte extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class ChangeMemoByte extends Migration
      */
     public function up()
     {
-        Schema::table('menus', function (Blueprint $table) {
-            $table->string('memo')->change();
+        Schema::table('recipe_genres', function (Blueprint $table) {
+            $table->string('genre')->change();
         });
     }
 
@@ -25,8 +25,8 @@ class ChangeMemoByte extends Migration
      */
     public function down()
     {
-        Schema::table('menus', function (Blueprint $table) {
-            $table->string('memo',100)->change();
+        Schema::table('recipe_genres', function (Blueprint $table) {
+            $table->string('genre',20)->change();
         });
     }
 }
