@@ -18,3 +18,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/recipe', 'RecipeController@store');
+Route::get('/img', 'FlySystemS3Controller@index');
