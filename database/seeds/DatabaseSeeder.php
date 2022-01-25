@@ -11,6 +11,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
         DB::table('users')->truncate();
         DB::table('recipe_genres')->truncate();
         DB::table('recipe_types')->truncate();
@@ -20,5 +22,7 @@ class DatabaseSeeder extends Seeder
             GenreTableSeeder::class,
             TypeTableSeeder::class,
         ]);
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }

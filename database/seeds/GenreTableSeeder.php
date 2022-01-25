@@ -11,6 +11,12 @@ class GenreTableSeeder extends Seeder
      */
     public function run()
     {
+
+        $param = [
+            'genre' => '未指定'
+        ];
+        DB::table('recipe_genres')->insert($param);
+
         $param = [
             'genre' => '和食'
         ];
@@ -23,11 +29,6 @@ class GenreTableSeeder extends Seeder
 
         $param = [
             'genre' => '中華'
-        ];
-        DB::table('recipe_genres')->insert($param);
-
-        $param = [
-            'genre' => 'その他'
         ];
         DB::table('recipe_genres')->insert($param);
     }

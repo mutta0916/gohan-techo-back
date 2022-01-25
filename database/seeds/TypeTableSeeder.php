@@ -12,6 +12,11 @@ class TypeTableSeeder extends Seeder
     public function run()
     {
         $param = [
+            'type' => '未指定'
+        ];
+        DB::table('recipe_types')->insert($param);
+
+        $param = [
             'type' => '主食'
         ];
         DB::table('recipe_types')->insert($param);
@@ -38,11 +43,6 @@ class TypeTableSeeder extends Seeder
 
         $param = [
             'type' => '麺'
-        ];
-        DB::table('recipe_types')->insert($param);
-
-        $param = [
-            'type' => 'その他'
         ];
         DB::table('recipe_types')->insert($param);
     }
