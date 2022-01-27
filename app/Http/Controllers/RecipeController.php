@@ -26,41 +26,24 @@ class RecipeController extends Controller
 
     public function store(Request $request)
     {
-        Log::info('★★★登録処理です★★★');
+        // 料理テーブル更新
         $recipe = new Recipe;
-        $recipe->user_id = 1;
-        $recipe->name = $request->input('name');
-        $recipe->genre_id = $request->input('genre');
-        $recipe->type_id = $request->input('type');
-        $recipe->servings = $request->input('servings');
-        $recipe->memo = $request->input('memo');
-        $recipe->save();
+        $recipeParams = $request->only(['name', 'genre_id', 'type_id', 'servings', 'memo']);
+        $recipeParams = array_merge($recipeParams,array('user_id' => 1));
+        Log::info($recipeParams);
+        $recipe->fill($recipeParams)->save();
 
-        // 料理手順テーブルデータ追加
-        $id = $recipe->id;
+        // 料理手順テーブル更新
         $recipeHowto = new RecipeHowto;
+        $recipeId = $recipe->id;
         $arrHowto = $request->input('howto');
-        Log::info($arrHowto);
         foreach($arrHowto as $value){
-          Log::info('配列取得');
-          Log::info($value);
-          Log::info('ID取得');
-          Log::info($value->id);
-          Log::info('作り方取得');
-          Log::info($value->howto);
-          $recipeHowto->user_id = 1;
-          $recipeHowto->recipe_id = $id;
-          $recipeHowto->howto_id = $value->id;
-          $recipeHowto->howto = $value;
-          // $recipeHowto->save();
+          $howtoParams = array('user_id' => 1, 'recipe_id' => $recipeId, 'howto_id' => $value['id'], 'howto' => $value['howto']);
+          $recipeHowto->fill($howtoParams)->save();
         }
 
-        // $recipe->fill($form)->save();
-
-        $recipes = Recipe::all();
         return response()->json([
-            'message' => 'Recipe created successfully',
-            'data' => $recipes
+            'message' => 'Recipe created successfully'
         ], 201);
     }
 }
