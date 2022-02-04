@@ -11,13 +11,8 @@ class FlySystemS3Controller extends Controller
 {
   public function index()
   {
-      Log::info('S3に画像保存その２');
       $disk = Storage::disk('s3');
-
-      Log::info(getcwd());
-      Log::info(__DIR__);
       $img_path = sprintf('%s%s', __DIR__, '/test.jpg');
-      Log::info($img_path);
       $contents = file_get_contents($img_path);
 
       // S3 にファイルをアップロード（パスはバケットディレクトリを起点として相対パスで記述）
