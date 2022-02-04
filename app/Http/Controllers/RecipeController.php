@@ -22,6 +22,7 @@ class RecipeController extends Controller
         $recipes = Recipe::where('user_id', $userId)
         ->get(['id', 'user_id', 'name', 'genre_id', 'type_id', 'memo']);
         $returnRecipes = array();
+        Log::info('変更しました。');
         foreach($recipes as $value){
             // 写真取得
             $path = sprintf('%s%s%s%s%s', $userId, '/', $value->id, '/', 'fjJueycKi2NAuz9W5w9Aqln0epclONZVx8Qh1JF1.jpg');
