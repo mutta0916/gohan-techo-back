@@ -6,25 +6,59 @@ use Illuminate\Http\Request;
 //後で消す
 use Illuminate\Support\Facades\Log;
 use App\Recipe;
-use App\RecipeGenre;
 use App\RecipeHowto;
 use App\RecipeIngredient;
+use App\RecipeGenre;
 use App\RecipeType;
 use SebastianBergmann\Environment\Console;
 use Illuminate\Support\Facades\Storage;
 
 class RecipeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $genres = RecipeGenre::all();
-        $types = RecipeType::all();
+        $disk = Storage::disk('s3');
+        $userId = $request->input('user_id');
+        $recipes = Recipe::where('user_id', $userId)
+        ->get(['id', 'user_id', 'name', 'genre_id', 'type_id', 'memo']);
+        $returnRecipes = array();
+        foreach($recipes as $value){
+            // 写真取得
+            $path = sprintf('%s%s%s%s%s', $userId, '/', $value->id, '/', 'fjJueycKi2NAuz9W5w9Aqln0epclONZVx8Qh1JF1.jpg');
+            if($disk->exists($path)) {
+                $contents = $disk->get($path);
+                $contents = sprintf('%s%s', 'data:image/jpeg;base64,', base64_encode($contents));
+            } else {
+                $contents = null;
+            }
+            array_push($returnRecipes,
+            array
+            (
+                'id' => $value->id,
+                'user_id' => $value->user_id,
+                'name' => $value->name,
+                'genre' => RecipeGenre::where('id', $value->genre_id)->first()->genre,
+                'type' => RecipeType::where('id', $value->type_id)->first()->type,
+                'memo' => $value->memo,
+                'photo' => $contents
+            ));
+        }
         return response()->json([
             'message' => 'OK!',
-            'genres' => $genres,
-            'types' => $types
+            'recipes' => $returnRecipes
         ], 200);
     }
+
+    // public function index()
+    // {
+    //     $genres = RecipeGenre::all();
+    //     $types = RecipeType::all();
+    //     return response()->json([
+    //         'message' => 'OK!',
+    //         'genres' => $genres,
+    //         'types' => $types
+    //     ], 200);
+    // }
 
     public function store(Request $request)
     {
