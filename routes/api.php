@@ -25,5 +25,6 @@ Route::get('/health', function () {
 });
 
 Route::get('/recipe', 'RecipeController@index');
+Route::get('/recipe/{id}/{recipe_id}', 'RecipeController@show');
 Route::post('/recipe', 'RecipeController@store');
 Route::get('/img', 'FlySystemS3Controller@index');

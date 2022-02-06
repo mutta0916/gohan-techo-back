@@ -17,36 +17,26 @@ class RecipeController extends Controller
 {
     public function index(Request $request)
     {
-        $disk = Storage::disk('s3');
         $userId = $request->input('user_id');
         $recipes = Recipe::where('user_id', $userId)
         ->get(['id', 'user_id', 'name', 'genre_id', 'type_id', 'memo']);
-        $returnRecipes = array();
-        foreach($recipes as $value){
-            // 写真取得
-            $path = sprintf('%s%s%s%s%s', $userId, '/', $value->id, '/', 'fjJueycKi2NAuz9W5w9Aqln0epclONZVx8Qh1JF1.jpg');
-            if($disk->exists($path)) {
-                $contents = $disk->get($path);
-                $contents = sprintf('%s%s', 'data:image/jpeg;base64,', base64_encode($contents));
-            } else {
-                $contents = null;
-            }
-            array_push($returnRecipes,
-            array
-            (
-                'id' => $value->id,
-                'user_id' => $value->user_id,
-                'name' => $value->name,
-                'genre' => RecipeGenre::where('id', $value->genre_id)->first()->genre,
-                'type' => RecipeType::where('id', $value->type_id)->first()->type,
-                'memo' => $value->memo,
-                'photo' => $contents
-            ));
-        }
+        $returnRecipes = $this->getPhoto($recipes, $userId);
         return response()->json([
             'message' => 'OK!',
             'recipes' => $returnRecipes
         ], 200);
+    }
+
+    public function show($id, $recipeId)
+    {
+      $recipe = Recipe::where('user_id', $id)->where('id', $recipeId)
+      ->get(['id', 'user_id', 'name', 'genre_id', 'type_id', 'memo', 'servings']);
+      Log::info($recipe->first()->howtos());
+      $returnRecipe = $this->getPhoto($recipe, $id);
+      return response()->json([
+          'message' => 'OK!',
+          'recipes' => $returnRecipe
+      ], 200);
     }
 
     // public function index()
@@ -95,5 +85,32 @@ class RecipeController extends Controller
         return response()->json([
             'message' => 'Recipe created successfully'
         ], 201);
+    }
+
+    public function getPhoto($recipes, $userId)
+    {
+        $returnRecipes = array();
+        $disk = Storage::disk('s3');
+        foreach($recipes as $value){
+          $path = sprintf('%s%s%s%s%s', $userId, '/', $value->id, '/', 'fjJueycKi2NAuz9W5w9Aqln0epclONZVx8Qh1JF1.jpg');
+          if($disk->exists($path)) {
+              $contents = $disk->get($path);
+              $contents = sprintf('%s%s', 'data:image/jpeg;base64,', base64_encode($contents));
+          } else {
+              $contents = null;
+          }
+          array_push($returnRecipes,
+          array
+          (
+              'id' => $value->id,
+              'user_id' => $userId,
+              'name' => $value->name,
+              'genre' => RecipeGenre::where('id', $value->genre_id)->first()->genre,
+              'type' => RecipeType::where('id', $value->type_id)->first()->type,
+              'memo' => $value->memo,
+              'photo' => $contents
+          ));
+       }
+       return $returnRecipes;
     }
 }
