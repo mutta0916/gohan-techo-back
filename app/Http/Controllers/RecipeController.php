@@ -27,11 +27,13 @@ class RecipeController extends Controller
         ], 200);
     }
 
-    public function show($id, $recipeId)
+    public function show($recipeId)
     {
+      $id = 1;
       $recipe = Recipe::where('user_id', $id)->where('id', $recipeId)
       ->get(['id', 'user_id', 'name', 'genre_id', 'type_id', 'memo', 'servings']);
-      Log::info($recipe->first()->howtos());
+      // Log::info('作り方取得');
+      // Log::info($recipe->first()->howtos());
       $returnRecipe = $this->getPhoto($recipe, $id);
       return response()->json([
           'message' => 'OK!',
@@ -81,6 +83,52 @@ class RecipeController extends Controller
         $file_name = sprintf('%s%s%s', $userId, '/', $recipeId);
         $disk = Storage::disk('s3');
         $disk->put($file_name, $photo, 'public');
+
+        return response()->json([
+            'message' => 'Recipe created successfully'
+        ], 201);
+    }
+
+    public function update(Request $request, $recipeId)
+    {
+        // 料理テーブル更新
+        Log::info('料理テーブル更新処理です。');
+        Log::info($request->memo);
+        // $recipe = Recipe::find($recipeId);
+        // Log::info($recipe);
+        // $recipeParams = $request->only(['name', 'genre_id', 'type_id', 'servings', 'memo']);
+        // $recipeParams = array_merge($recipeParams,array('user_id' => 1));
+        // $recipe->fill($recipeParams)->save();
+        // $recipe->memo = $request->memo;
+        // $recipe->save();
+
+        $update = [
+          'memo' => $request->memo
+        ];
+        Recipe::where('id', $recipeId)->update($update);
+
+        // // 料理手順テーブル更新
+        // $recipeId = $recipe->id;
+        // $arrHowto = json_decode($request->input('howto'));
+        // foreach($arrHowto as $value){
+        //   $recipeHowto = new RecipeHowto;
+        //   $howtoParams = array('user_id' => $userId, 'recipe_id' => $recipeId, 'howto_id' => $value->id, 'howto' => $value->howto);
+        //   $recipeHowto->fill($howtoParams)->save();
+        // }
+
+        // // 料理材料テーブル更新
+        // $arrIngredient = json_decode($request->input('ingredient'));
+        // foreach($arrIngredient as $value){
+        //   $recipeIngredient = new RecipeIngredient;
+        //   $ingredientParams = array('user_id' => $userId, 'recipe_id' => $recipeId, 'ingredient_id' => $value['id'], 'name' => $value['name'], 'amount' => $value['amount']);
+        //   $recipeIngredient->fill($ingredientParams)->save();
+        // }
+
+        // // 料理写真取得
+        // $photo = $request->file('photo');
+        // $file_name = sprintf('%s%s%s', $userId, '/', $recipeId);
+        // $disk = Storage::disk('s3');
+        // $disk->put($file_name, $photo, 'public');
 
         return response()->json([
             'message' => 'Recipe created successfully'

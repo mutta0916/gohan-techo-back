@@ -24,7 +24,10 @@ Route::get('/health', function () {
     ], 200);
 });
 
-Route::get('/recipe', 'RecipeController@index');
-Route::get('/recipe/{id}/{recipe_id}', 'RecipeController@show');
-Route::post('/recipe', 'RecipeController@store');
+// Route::get('/recipe', 'RecipeController@index');
+// Route::get('/recipe/{id}/{recipe_id}', 'RecipeController@show');
+// Route::post('/recipe', 'RecipeController@store');
+// Route::post('/recipe/{id}/{recipe_id}', 'RecipeController@update');
+Route::resource('/recipe', RecipeController::class);
+
 Route::get('/img', 'FlySystemS3Controller@index');
