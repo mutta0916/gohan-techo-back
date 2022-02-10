@@ -30,14 +30,14 @@ class RecipeController extends Controller
     public function show($recipeId)
     {
       $id = 1;
-      $recipe = Recipe::where('user_id', $id)->where('id', $recipeId)
+      $recipe = Recipe::find($recipeId)
       ->get(['id', 'user_id', 'name', 'genre_id', 'type_id', 'memo', 'servings']);
-      // Log::info('作り方取得');
-      // Log::info($recipe->first()->howtos());
+      $howtos = Recipe::find($recipeId)->howtos()->get(['id', 'howto']);
       $returnRecipe = $this->getPhoto($recipe, $id);
       return response()->json([
           'message' => 'OK!',
-          'recipes' => $returnRecipe
+          'recipes' => $returnRecipe,
+          'howtos' => $howtos,
       ], 200);
     }
 
@@ -92,29 +92,20 @@ class RecipeController extends Controller
     public function update(Request $request, $recipeId)
     {
         // 料理テーブル更新
-        Log::info('料理テーブル更新処理です。');
-        Log::info($request->memo);
-        // $recipe = Recipe::find($recipeId);
-        // Log::info($recipe);
-        // $recipeParams = $request->only(['name', 'genre_id', 'type_id', 'servings', 'memo']);
-        // $recipeParams = array_merge($recipeParams,array('user_id' => 1));
-        // $recipe->fill($recipeParams)->save();
-        // $recipe->memo = $request->memo;
-        // $recipe->save();
+        $recipe = Recipe::find($recipeId);
+        $recipeParams = $request->only(['name', 'genre_id', 'type_id', 'servings', 'memo']);
+        $recipe->fill($recipeParams)->save();
 
-        $update = [
-          'memo' => $request->memo
-        ];
-        Recipe::where('id', $recipeId)->update($update);
-
-        // // 料理手順テーブル更新
-        // $recipeId = $recipe->id;
-        // $arrHowto = json_decode($request->input('howto'));
-        // foreach($arrHowto as $value){
-        //   $recipeHowto = new RecipeHowto;
-        //   $howtoParams = array('user_id' => $userId, 'recipe_id' => $recipeId, 'howto_id' => $value->id, 'howto' => $value->howto);
-        //   $recipeHowto->fill($howtoParams)->save();
-        // }
+        // 料理手順テーブル更新
+        $arrHowto = json_decode($request->input('howto'));
+        Log::info($arrHowto);
+        foreach($arrHowto as $value){
+          Log::info($value->howto);
+          RecipeHowto::updateOrCreate(
+            ['id' => $value->id],
+            ['recipe_id' => $recipeId, 'howto' => $value->howto]
+          );
+        }
 
         // // 料理材料テーブル更新
         // $arrIngredient = json_decode($request->input('ingredient'));
