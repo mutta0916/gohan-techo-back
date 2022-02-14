@@ -159,4 +159,26 @@ class RecipeController extends Controller
        }
        return $returnRecipes;
     }
+
+    public function destroy($recipeId)
+    {
+        // 料理テーブル更新
+        Recipe::find($recipeId)->delete();
+
+        // 料理手順テーブル更新
+        RecipeHowto::where('recipe_id', $recipeId)->delete();
+
+        // 料理材料テーブル更新
+        RecipeIngredient::where('recipe_id', $recipeId)->delete();
+
+        // 料理写真登録
+        $disk = Storage::disk('s3');
+        $path = sprintf('%s%s%s%s%s%s', 'userId=', 1, '/', 'recipeId=', $recipeId, '/');
+        $files = $disk->allFiles($path);
+        $disk->delete($files);
+
+        return response()->json([
+          'message' => 'Recipe deleted successfully'
+      ], 204);
+    }
 }
