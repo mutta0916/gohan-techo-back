@@ -81,9 +81,11 @@ class RecipeController extends Controller
 
         // 料理写真登録
         $photo = $request->file('photo');
-        $file_name = sprintf('%s%s%s', $userId, '/', $recipeId);
-        $disk = Storage::disk('s3');
-        $disk->put($file_name, $photo, 'public');
+        if ($photo) {
+            $path = sprintf('%s%s%s%s%s%s', 'userId=', 1, '/', 'recipeId=', $recipeId, '/');
+            $disk = Storage::disk('s3');
+            $disk->put($path, $photo, 'public');
+        }
 
         return response()->json([
             'message' => 'Recipe created successfully'
@@ -117,11 +119,13 @@ class RecipeController extends Controller
 
         // 料理写真登録
         $photo = $request->file('photo');
-        $disk = Storage::disk('s3');
-        $path = sprintf('%s%s%s%s%s', 'userId=', 1, '/', 'recipeId=', $recipeId, '/');
-        $files = $disk->allFiles($path);
-        $disk->delete($files);
-        $disk->put($path, $photo, 'public');
+        if ($photo) {
+            $disk = Storage::disk('s3');
+            $path = sprintf('%s%s%s%s%s%s', 'userId=', 1, '/', 'recipeId=', $recipeId, '/');
+            $files = $disk->allFiles($path);
+            $disk->delete($files);
+            $disk->put($path, $photo, 'public');
+        }
 
         return response()->json([
             'message' => 'Recipe updated successfully'
