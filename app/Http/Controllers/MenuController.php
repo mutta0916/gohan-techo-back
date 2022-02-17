@@ -5,46 +5,72 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Menu;
 use App\MenuRecipe;
+use Illuminate\Support\Facades\Log;
+use phpDocumentor\Reflection\Location;
 
 class MenuController extends Controller
 {
   public function index(Request $request)
   {
-      // $userId = $request->input('user_id');
-      // $recipes = Recipe::where('user_id', $userId)->get();
-      // $returnRecipes = $this->getPhoto($recipes, $userId);
-      // return response()->json([
-      //     'message' => 'OK!',
-      //     'recipes' => $returnRecipes
-      // ], 200);
-  }
+    $userId = $request->input('user_id');
+    $year = date('Y');
+    $month = date('m');
 
-  public function show($recipeId)
-  {
-    // $id = 1;
-    // $recipe = Recipe::find($recipeId);
-    // $howtos = $recipe->howtos()->get();
-    // $ingredients = $recipe->ingredients()->get();
-    // $recipe = array($recipe);
-    // $returnRecipe = $this->getPhoto($recipe, $id);
-    // return response()->json([
-    //     'message' => 'OK!',
-    //     'recipes' => $returnRecipe,
-    //     'howtos' => $howtos,
-    //     'ingredients' => $ingredients
-    // ], 200);
-  }
+    $registeredMenus = Menu::leftJoin('menu_recipes', 'menus.id', '=', 'menu_recipes.menu_id')
+    ->where('user_id', $userId)
+    ->whereYear('date', $year)
+    ->whereMonth('date', $month)
+    ->get();
 
-  // public function index()
-  // {
-  //     $genres = RecipeGenre::all();
-  //     $types = RecipeType::all();
-  //     return response()->json([
-  //         'message' => 'OK!',
-  //         'genres' => $genres,
-  //         'types' => $types
-  //     ], 200);
-  // }
+    // JSON整形処理
+    $returnMenus = array();
+    // 日付
+    for ($day = 1; $day <= date('t'); $day++) {
+        // カテゴリー
+        for ($category = 0; $category <= 2; $category++) {
+            // 位置
+            for ($location = 0; $location <= 5; $location++) {
+                array_push($returnMenus,
+                array
+                (
+                  "date" => $year . '-' . $month . '-' . sprintf('%02d', $day),
+                  "category" => $category,
+                  "location" => $location,
+                  "title" => "",
+                  "recipe_id" => 0
+                ));
+            }
+        }
+    }
+
+    // 検索
+    foreach ($registeredMenus As $registeredMenu)
+    {
+        // 更新する配列を取得
+        $updateArray = array_filter($returnMenus, function($returnMenu) use($registeredMenu) {
+            Log::info('登録済み情報');
+            Log::info($registeredMenu->date);
+            Log::info($registeredMenu->category);
+            Log::info($registeredMenu->location);
+            Log::info('枠情報');
+            Log::info($returnMenu["date"]);
+            Log::info($returnMenu["category"]);
+            Log::info($returnMenu["location"]);
+            return $returnMenu["date"] === $registeredMenu->date && $returnMenu["category"] === $registeredMenu->category && $returnMenu["location"] === $registeredMenu->location;
+        });
+        Log::info($updateArray);
+        $index = key($updateArray);
+        Log::info($index);
+        $returnMenus[$index]["title"] = "テスト";
+        $returnMenus[$index]["recipe_id"] = $registeredMenu->recipe_id;
+    }
+
+    return response()->json([
+        'message' => 'OK!',
+        'updateArray' => $updateArray,
+        'menus' => $returnMenus
+    ], 200);
+  }
 
   public function store(Request $request)
   {
@@ -66,8 +92,8 @@ class MenuController extends Controller
       ], 201);
   }
 
-  public function update(Request $request, $recipeId)
-  {
+  // public function update(Request $request, $recipeId)
+  // {
   //     // 料理テーブル更新
   //     $recipe = Recipe::find($recipeId);
   //     $recipeParams = $request->only(['name', 'genre_id', 'type_id', 'servings', 'memo']);
@@ -106,36 +132,8 @@ class MenuController extends Controller
   //     ], 201);
   // }
 
-  // public function getPhoto($recipes, $userId)
+  // public function destroy($recipeId)
   // {
-  //     $returnRecipes = array();
-  //     $disk = Storage::disk('s3');
-  //     foreach($recipes as $value){
-  //       $path = sprintf('%s%s%s%s%s%s', 'userId=', $userId, '/', 'recipeId=', $value->id, '/');
-  //       $files = $disk->allFiles($path);
-  //       if(count($files) > 0) {
-  //         $contents = $disk->get($files[0]);
-  //         $contents = sprintf('%s%s', 'data:image/jpeg;base64,', base64_encode($contents));
-  //       } else {
-  //         $contents = null;
-  //       }
-  //       array_push($returnRecipes,
-  //       array
-  //       (
-  //           'id' => $value->id,
-  //           'user_id' => $userId,
-  //           'name' => $value->name,
-  //           'genre' => RecipeGenre::find($value->genre_id)->first()->genre,
-  //           'type' => RecipeType::find($value->type_id)->first()->type,
-  //           'memo' => $value->memo,
-  //           'photo' => $contents
-  //       ));
-  //    }
-  //    return $returnRecipes;
-  }
-
-  public function destroy($recipeId)
-  {
     //   // 料理テーブル更新
     //   Recipe::find($recipeId)->delete();
 
@@ -154,5 +152,5 @@ class MenuController extends Controller
     //   return response()->json([
     //     'message' => 'Recipe deleted successfully'
     // ], 204);
-  }
+  //}
 }
