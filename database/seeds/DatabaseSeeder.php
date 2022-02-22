@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
         DB::table('recipe_types')->truncate();
         DB::table('recipe_ingredients')->truncate();
         DB::table('recipe_howtos')->truncate();
+        DB::table('menus')->truncate();
+        DB::table('menu_recipes')->truncate();
 
         $this->call([
             UsersTableSeeder::class,
