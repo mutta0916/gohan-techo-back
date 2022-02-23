@@ -21,7 +21,7 @@ class MenuController extends Controller
         ->where('menus.user_id', $userId)
         ->whereYear('date', $year)
         ->whereMonth('date', $month)
-        ->get();
+        ->get(['menus.id', 'menus.user_id', 'date', 'category', 'title', 'menu_recipes.id as menu_recipes_id', 'location', 'recipe_id', 'name']);
 
         $registeredMenus = $this->getPhoto($registeredMenus, $userId);
 
@@ -50,9 +50,10 @@ class MenuController extends Controller
                     array_push($returnMenus[$day-1]["data"][$category]["data"],
                     array
                     (
+                        "menu_recipes_id" => 0,
                         "location" => $location,
                         "recipe_id" => 0,
-                        "name" => "",
+                        "recipe_name" => "",
                         "recipe_photo" => ""
                     ));
                 }
@@ -64,28 +65,28 @@ class MenuController extends Controller
         // 更新する配列を取得
         // 日付による絞り込み
         $updateDateArray = array_filter($returnMenus, function($returnMenu) use($registeredMenu) {
-            return $returnMenu["date"] === $registeredMenu['date'];
+            return $returnMenu["date"] === $registeredMenu["date"];
         });
         $dateIndex = key($updateDateArray);
         // カテゴリーによる絞り込み
         $updateCategoryArray = array_filter(reset($updateDateArray)["data"], function($updateDate) use($registeredMenu) {
-            return $updateDate["category"] === $registeredMenu['category'];
+            return $updateDate["category"] === $registeredMenu["category"];
         });
         $categoryIndex = key($updateCategoryArray);
-        $returnMenus[$dateIndex]["data"][$categoryIndex]["id"] = $registeredMenu['menu_id'];
-        $returnMenus[$dateIndex]["data"][$categoryIndex]["title"] = $registeredMenu['title'];
+        $returnMenus[$dateIndex]["data"][$categoryIndex]["id"] = $registeredMenu["id"];
+        $returnMenus[$dateIndex]["data"][$categoryIndex]["title"] = $registeredMenu["title"];
         // 出力位置による絞り込み
-        if ( $registeredMenu['location'] ){
+        if ( !is_null($registeredMenu['location']) ){
             $updateLocationArray = array_filter(reset($updateCategoryArray)["data"], function($updateCategory) use($registeredMenu) {
-                return $updateCategory["location"] === $registeredMenu['location'];
+                return $updateCategory["location"] === $registeredMenu["location"];
             });
             $locationIndex = key($updateLocationArray);
-            $returnMenus[$dateIndex]["data"][$categoryIndex]["data"][$locationIndex]["recipe_id"] = $registeredMenu['recipe_id'];
-            $returnMenus[$dateIndex]["data"][$categoryIndex]["data"][$locationIndex]["name"] = $registeredMenu['name'];
-            $returnMenus[$dateIndex]["data"][$categoryIndex]["data"][$locationIndex]["recipe_photo"] = $registeredMenu['recipe_photo'];
+            $returnMenus[$dateIndex]["data"][$categoryIndex]["data"][$locationIndex]["menu_recipes_id"] = $registeredMenu["menu_recipes_id"];
+            $returnMenus[$dateIndex]["data"][$categoryIndex]["data"][$locationIndex]["recipe_id"] = $registeredMenu["recipe_id"];
+            $returnMenus[$dateIndex]["data"][$categoryIndex]["data"][$locationIndex]["recipe_name"] = $registeredMenu["name"];
+            $returnMenus[$dateIndex]["data"][$categoryIndex]["data"][$locationIndex]["recipe_photo"] = $registeredMenu["recipe_photo"];
         }
     }
-    Log::info($returnMenus);
     return response()->json([
         'message' => 'OK!',
         'menus' => $returnMenus
@@ -102,12 +103,11 @@ class MenuController extends Controller
       ['user_id' => $userId, 'date' => $request->input('date'), 'category' => $request->input('category'), 'title' => $request->input('title') ]
     );
 
-    if( !$request->input('title') ) {
-        $menuId = $menu->id;
+    if( $request->input('update_target') === 1 ) {
         // 献立明細テーブル更新
         MenuRecipe::updateOrCreate(
-          ['menu_id' => $menuId, 'location' => $request->input('location')],
-          ['recipe_id' => $request->input('recipe_id') ]
+          ['id' => $request->input('menu_recipes_id')],
+          ['menu_id' => $menu->id, 'location' => $request->input('location'), 'recipe_id' => $request->input('recipe_id') ]
         );
     }
 
@@ -137,7 +137,7 @@ class MenuController extends Controller
             "date" => $value->date,
             "category" => $value->category,
             "title"=> $value->title,
-            "menu_id" => $value->menu_id,
+            "menu_recipes_id" => $value->menu_recipes_id,
             "location" => $value->location,
             "recipe_id" => $value->recipe_id,
             "name" => $value->name,
@@ -147,25 +147,13 @@ class MenuController extends Controller
      return $returnRecipes;
   }
 
-  // public function destroy($recipeId)
-  // {
-    //   // 料理テーブル更新
-    //   Recipe::find($recipeId)->delete();
+  public function destroy($menuRecipesId)
+  {
+      // 献立明細テーブル更新
+      MenuRecipe::find($menuRecipesId)->delete();
 
-    //   // 料理手順テーブル更新
-    //   RecipeHowto::where('recipe_id', $recipeId)->delete();
-
-    //   // 料理材料テーブル更新
-    //   RecipeIngredient::where('recipe_id', $recipeId)->delete();
-
-    //   // 料理写真登録
-    //   $disk = Storage::disk('s3');
-    //   $path = sprintf('%s%s%s%s%s%s', 'userId=', 1, '/', 'recipeId=', $recipeId, '/');
-    //   $files = $disk->allFiles($path);
-    //   $disk->delete($files);
-
-    //   return response()->json([
-    //     'message' => 'Recipe deleted successfully'
-    // ], 204);
-  //}
+      return response()->json([
+        'message' => 'MenuRecipes deleted successfully'
+    ], 204);
+  }
 }
