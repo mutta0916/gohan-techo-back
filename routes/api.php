@@ -26,3 +26,5 @@ Route::get('/health', function () {
 
 Route::resource('/recipe', RecipeController::class);
 Route::resource('/menu', MenuController::class);
+Route::resource('/genre', RecipeGenreController::class);
+Route::resource('/type', RecipeTypeController::class);
