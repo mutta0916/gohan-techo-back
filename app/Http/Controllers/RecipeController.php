@@ -3,14 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//後で消す
-use Illuminate\Support\Facades\Log;
 use App\Recipe;
 use App\RecipeHowto;
 use App\RecipeIngredient;
 use App\RecipeGenre;
 use App\RecipeType;
-use SebastianBergmann\Environment\Console;
 use Illuminate\Support\Facades\Storage;
 
 class RecipeController extends Controller
@@ -41,17 +38,6 @@ class RecipeController extends Controller
           'ingredients' => $ingredients
       ], 200);
     }
-
-    // public function index()
-    // {
-    //     $genres = RecipeGenre::all();
-    //     $types = RecipeType::all();
-    //     return response()->json([
-    //         'message' => 'OK!',
-    //         'genres' => $genres,
-    //         'types' => $types
-    //     ], 200);
-    // }
 
     public function store(Request $request)
     {
@@ -151,8 +137,11 @@ class RecipeController extends Controller
               'id' => $value->id,
               'user_id' => $userId,
               'name' => $value->name,
-              'genre' => RecipeGenre::find($value->genre_id)->first()->genre,
-              'type' => RecipeType::find($value->type_id)->first()->type,
+              'genre' => $value->genre_id,
+              'genre' => $value->genre_id,
+              'genre_name' => RecipeGenre::find($value->genre_id)->genre,
+              'type' => $value->type_id,
+              'type_name' => RecipeType::find($value->type_id)->type,
               'memo' => $value->memo,
               'photo' => $contents
           ));
