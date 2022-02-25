@@ -16,3 +16,15 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/health', function () {
+    $message = '200 OK!';
+    return response()->json([
+        'message' => $message
+    ], 200);
+});
+
+Route::resource('/recipe', RecipeController::class);
+Route::resource('/menu', MenuController::class);
+Route::resource('/genre', RecipeGenreController::class);
+Route::resource('/type', RecipeTypeController::class);
