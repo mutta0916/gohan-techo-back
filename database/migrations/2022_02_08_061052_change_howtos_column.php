@@ -35,7 +35,7 @@ class ChangeHowtosColumn extends Migration
             $table->dropColumn('id');
             $table->unsignedBigInteger('user_id')->first();
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('CASCADE');
-            $table->primary(['user_id', 'recipe_id', 'howto_order']);
+            $table->primary(['user_id', 'recipe_id']);
         });
     }
 }
