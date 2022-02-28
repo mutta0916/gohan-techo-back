@@ -17,8 +17,8 @@ class CreateRecipesTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->references('id')->on('users')->onUpdate('RESTRICT')->onDelete('CASCADE');
             $table->string('name',40);
-            $table->tinyInteger('genre_id')->references('id')->on('recipe_genres')->onUpdate('RESTRICT')->onDelete('CASCADE');
-            $table->tinyInteger('type_id')->references('id')->on('recipe_types')->onUpdate('RESTRICT')->onDelete('CASCADE');
+            $table->unsignedBigInteger('genre_id')->references('id')->on('recipe_genres')->onUpdate('RESTRICT')->onDelete('CASCADE');
+            $table->unsignedBigInteger('type_id')->references('id')->on('recipe_types')->onUpdate('RESTRICT')->onDelete('CASCADE');
             $table->tinyInteger('servings');
             $table->string('photo',100);
             $table->string('memo',100);
