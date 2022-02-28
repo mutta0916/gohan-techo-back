@@ -40,9 +40,9 @@ jobs:
         aws ec2 authorize-security-group-ingress --group-id ${{ secrets.EC2_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
         # SSH接続して、git pullする
-        echo "${{ secrets.GIT_PRIVATE_KEY }}" > private_key
-        chmod 600 private_key
-        ssh -vvv -oStrictHostKeyChecking=no ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i private_key "cd /var/www/gohan-techo-back/ && git fetch --prune && git checkout main && git pull origin main"
+        echo "${{ secrets.GIT_PRIVATE_KEY }}" > ~/.ssh/private_key
+        chmod 600 ~/.ssh/private_key
+        ssh -v -oStrictHostKeyChecking=no ${{ secrets.EC2_USER_NAME }}@${{ secrets.EC2_HOST_NAME }} -i ~/.ssh/private_key "cd /var/www/gohan-techo-back/ && git fetch --prune && git checkout main && git pull origin main"
 
         # SSHのセキュリティグループを閉じる
         aws ec2 revoke-security-group-ingress --group-id ${{ secrets.EC2_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
