@@ -52,17 +52,17 @@ class RecipeController extends Controller
         $recipeId = $recipe->id;
         $arrHowto = json_decode($request->input('howto'));
         foreach($arrHowto as $value){
-          $recipeHowto = new RecipeHowto;
-          $howtoParams = array('user_id' => $userId, 'recipe_id' => $recipeId, 'howto_id' => $value->id, 'howto' => $value->howto);
-          $recipeHowto->fill($howtoParams)->save();
+            $recipeHowto = new RecipeHowto;
+            $howtoParams = array('recipe_id' => $recipeId, 'howto' => $value->howto);
+            $recipeHowto->fill($howtoParams)->save();
         }
 
         // 料理材料テーブル更新
         $arrIngredient = json_decode($request->input('ingredient'));
         foreach($arrIngredient as $value){
-          $recipeIngredient = new RecipeIngredient;
-          $ingredientParams = array('user_id' => $userId, 'recipe_id' => $recipeId, 'ingredient_id' => $value['id'], 'name' => $value['name'], 'amount' => $value['amount']);
-          $recipeIngredient->fill($ingredientParams)->save();
+            $recipeIngredient = new RecipeIngredient;
+            $ingredientParams = array('recipe_id' => $recipeId, 'name' => $value->name, 'amount' => $value->amount);
+            $recipeIngredient->fill($ingredientParams)->save();
         }
 
         // 料理写真登録
@@ -138,10 +138,10 @@ class RecipeController extends Controller
               'user_id' => $userId,
               'name' => $value->name,
               'genre' => $value->genre_id,
-              'genre' => $value->genre_id,
               'genre_name' => RecipeGenre::find($value->genre_id)->genre,
               'type' => $value->type_id,
               'type_name' => RecipeType::find($value->type_id)->type,
+              'servings' => $value->servings,
               'memo' => $value->memo,
               'photo' => $contents
           ));
