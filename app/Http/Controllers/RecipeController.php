@@ -9,6 +9,7 @@ use App\RecipeIngredient;
 use App\RecipeGenre;
 use App\RecipeType;
 use Illuminate\Support\Facades\Storage;
+use Validator;
 
 class RecipeController extends Controller
 {
@@ -41,11 +42,21 @@ class RecipeController extends Controller
 
     public function store(Request $request)
     {
+        // 入力内容チェック
+        $validator = Validator::make($request->all(), [
+            'name' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Recipe created failed'
+            ], 400);
+        }
+
         // 料理テーブル更新
         $recipe = new Recipe;
         $userId = $request->input('user_id');
         $recipeParams = $request->only(['name', 'genre_id', 'type_id', 'servings', 'memo']);
-        $recipeParams = array_merge($recipeParams,array('user_id' => 1));
+        $recipeParams = array_merge($recipeParams,array('user_id' => $userId));
         $recipe->fill($recipeParams)->save();
 
         // 料理手順テーブル更新
@@ -80,6 +91,16 @@ class RecipeController extends Controller
 
     public function update(Request $request, $recipeId)
     {
+        // 入力内容チェック
+        $validator = Validator::make($request->all(), [
+            'name' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Recipe created failed'
+            ], 400);
+        }
+
         // 料理テーブル更新
         $recipe = Recipe::find($recipeId);
         $recipeParams = $request->only(['name', 'genre_id', 'type_id', 'servings', 'memo']);

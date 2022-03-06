@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Menu;
 use App\MenuRecipe;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Log;
 
 class MenuController extends Controller
 {
