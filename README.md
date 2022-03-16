@@ -1,6 +1,4 @@
-# README
-# アプリ名
-ごはん手帳
+# ごはん手帳
 # URL
 https://nostalgic-joliot-07ccaa.netlify.app/
 # 概要
