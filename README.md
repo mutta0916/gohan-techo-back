@@ -5,7 +5,7 @@
 https://nostalgic-joliot-07ccaa.netlify.app/
 
 # 技術要件
-|               |             |             |
+| 分類          | 技術         | バージョン   |
 |:--------------|:------------|:------------|
 | バックエンド   | PHP         | 8.0.15      |
 |               | Laravel     | 6           |
@@ -14,14 +14,14 @@ https://nostalgic-joliot-07ccaa.netlify.app/
 |               | JavaScript  |             |
 |               | Vue.js      |2.6.14       |
 |               | Nuxt.js     |2.15.8       |
-| DB            | MySQL       |
-| インフラ AWS   | EC2         |
-|               | RDS         |
-|               | S3          |
-|               | Route 53    |
-|               | ACM         |
-| バージョン管理 | Github      |
-| タスク管理     | Redmine     |
+| DB            | MySQL       |             |
+| インフラ AWS   | EC2         |             |
+|               | RDS         |             |
+|               | S3          |             |
+|               | Route 53    |             |
+|               | ACM         |             |
+| バージョン管理 | Github      |             |
+| タスク管理     | Redmine     |             |
 
 # 機能一覧
 
