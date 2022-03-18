@@ -1,78 +1,46 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# :rice_ball:ごはん手帳
+覚えておきたい料理レシピの管理と献立作成ができるアプリケーションです。  
+下記URLからアクセスできます。  
+https://nostalgic-joliot-07ccaa.netlify.app/
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+# なぜ作ったか
+よく自炊をするのですが、献立を立てるときに下記のことに以前から悩んでいました。
+- なにか食べたかったはずなのに、何を食べたかったかいざ献立を立てるときには忘れている。
+- 食べたいものがあったのに、どこにレシピを保存したかわからなくなる。
+- 色々なものを食べたかったはずなのに、気づいたら同じ料理を食べている。
+- 献立をたてたら、茶色一色だった。
 
-## About Laravel
+これらの悩みを解決したいと思い、開発いたしました。  
+具体的には、
+- なにか食べたかったはずなのに、何を食べたかったかいざ献立を立てるときには忘れている。
+- 食べたいものがあったのに、どこにレシピを保存したかわからなくなる。  
+⇒ 料理の情報を集約できるよう、料理レシピ登録機能を実装しました。
+- 気づいたら同じ料理を食べている。  
+⇒ 献立を月ごとの一覧で確認できるようにしました。
+- 献立を立てたら、彩りに欠けていた。  
+⇒ 献立表に写真が表示されるようにしました。
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# 技術要件
+| 分類          | 技術         | バージョン   |
+|:--------------|:------------|:------------|
+| バックエンド   | PHP         | 8.0.15      |
+|               | Laravel     | 6           |
+| フロントエンド | HTML5       |             |
+|               | CSS         |             |
+|               | JavaScript  |             |
+|               | Vue.js      |2.6.14       |
+|               | Nuxt.js     |2.15.8       |
+| DB            | MySQL       |             |
+| インフラ AWS   | EC2         |             |
+|               | RDS         |             |
+|               | S3          |             |
+|               | Route 53    |             |
+|               | ACM         |             |
+| バージョン管理 | Github      |             |
+| タスク管理     | Redmine     |             |
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+# インフラ構成図
+![infrastructure](https://user-images.githubusercontent.com/49871162/158778366-7f0f0923-2208-49c3-a236-1d94d74605cd.jpg)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# ER図
+![ER図](https://user-images.githubusercontent.com/49871162/158953703-08cd7d57-52fb-48cf-8262-6d1e5b35a4a8.PNG)
