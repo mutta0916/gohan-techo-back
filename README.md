@@ -1,7 +1,6 @@
-# ごはん手帳
+# ごはん手帳:rice_ball:
 覚えておきたい料理レシピの管理と献立作成ができるアプリケーションです。  
 下記URLからアクセスできます。  
-9:00 ～ 18:00のみ稼働しています。  
 https://nostalgic-joliot-07ccaa.netlify.app/
 
 # 技術要件
@@ -23,15 +22,8 @@ https://nostalgic-joliot-07ccaa.netlify.app/
 | バージョン管理 | Github      |             |
 | タスク管理     | Redmine     |             |
 
-# 機能一覧
-
 # インフラ構成図
 ![infrastructure](https://user-images.githubusercontent.com/49871162/158778366-7f0f0923-2208-49c3-a236-1d94d74605cd.jpg)
-# ワイヤーフレーム
-https://docs.google.com/spreadsheets/d/1R_V_0_mN6vc9FmpvX4esXV_RjuC6reKlzCqc4jcw6J8/edit?usp=sharing
-# 画面遷移図
-https://docs.google.com/spreadsheets/d/1R_V_0_mN6vc9FmpvX4esXV_RjuC6reKlzCqc4jcw6J8/edit?usp=sharing
-# テーブル定義書
-https://docs.google.com/spreadsheets/d/1R_V_0_mN6vc9FmpvX4esXV_RjuC6reKlzCqc4jcw6J8/edit?usp=sharing
-# ER図
 
+# ER図
+![ER図](https://user-images.githubusercontent.com/49871162/158953703-08cd7d57-52fb-48cf-8262-6d1e5b35a4a8.PNG)
